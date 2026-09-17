@@ -5,6 +5,7 @@
 #include <fstream>
 #include <string>
 #include <sstream>
+#include <cassert>
 
 #define ASSERT(x) if (!(x)) __debugbreak();
 #define GLCALL(x) GLClearError();\
@@ -126,6 +127,8 @@ int main()
 	// Make the OpenGL context current
 	glfwMakeContextCurrent(window);
 
+	glfwSwapInterval(1);
+
 	GLenum err = glewInit();
 
 	if (err != GLEW_OK)
@@ -176,6 +179,13 @@ int main()
 	unsigned int shader = createShader(source.vertexSource, source.fragmentSource);
 	glUseProgram(shader);
 
+	int location = glGetUniformLocation(shader, "u_Color");
+	assert(location != -1);
+	GLCALL(glUniform4f(location, 1.0f, 0.3f, 0.8f, 1.0f));
+
+	float red_component = 0.0f;
+	float increment = 0.05f;
+
 	// Main loop
 	while (!glfwWindowShouldClose(window))
 	{
@@ -188,7 +198,15 @@ int main()
 		//glVertex2f(0.5f, -0.5f);
 		//glEnd();
 
+		GLCALL(glUniform4f(location, red_component, 0.3f, 0.8f, 1.0f));
 		GLCALL(glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr));
+
+		if (red_component > 1.0f)
+			increment = -0.05f;
+		else if (red_component < 0.0f)
+			increment = 0.05f;
+
+		red_component += increment;
 
 		// Display the rendered frame
 		glfwSwapBuffers(window);
