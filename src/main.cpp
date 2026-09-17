@@ -6,6 +6,26 @@
 #include <string>
 #include <sstream>
 
+#define ASSERT(x) if (!(x)) __debugbreak();
+#define GLCALL(x) GLClearError();\
+	x;\
+	ASSERT(GLLogCall(#x, __FILE__, __LINE__))
+
+static void GLClearError()
+{
+	while (glGetError() != GL_NO_ERROR);
+}
+
+static bool GLLogCall(const char* function, const char* file, int line)
+{
+	while (GLenum error = glGetError())
+	{
+		std::cout << "[OpenGL Error] (" << error << ")" << function << " " << file << ":" << line << std::endl;
+		return false;
+	}
+	return true;
+}
+
 struct ShaderProgramSource
 {
 	std::string vertexSource;
@@ -17,7 +37,7 @@ static ShaderProgramSource parseShader(const std::string& filepath)
 	std::ifstream stream(filepath);
 	enum class ShaderType
 	{
-		NONE = -1, VERTEX = 0, FRAGMNET = 1
+		NONE = -1, VERTEX = 0, FRAGMENT = 1
 	};
 
 	std::stringstream ss[2];
@@ -30,7 +50,7 @@ static ShaderProgramSource parseShader(const std::string& filepath)
 			if (line.find("vertex") != std::string::npos)
 				type = ShaderType::VERTEX;
 			else if (line.find("fragment") != std::string::npos)
-				type = ShaderType::FRAGMNET;
+				type = ShaderType::FRAGMENT;
 		}
 		else
 		{
@@ -168,7 +188,7 @@ int main()
 		//glVertex2f(0.5f, -0.5f);
 		//glEnd();
 
-		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
+		GLCALL(glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr));
 
 		// Display the rendered frame
 		glfwSwapBuffers(window);
