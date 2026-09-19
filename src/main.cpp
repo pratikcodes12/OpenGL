@@ -111,9 +111,9 @@ int main()
 		return -1;
 
 	// Request an OpenGL 4.6 Core Profile context
-	//glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
-	//glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
-	//glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
+	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
 	// Create a window and OpenGL context
 	GLFWwindow* window = glfwCreateWindow(640, 480, "Modern OpenGL", nullptr, nullptr);
@@ -161,7 +161,7 @@ int main()
 	unsigned int buffer;
 	glGenBuffers(1, &buffer);
 	glBindBuffer(GL_ARRAY_BUFFER, buffer);
-	glBufferData(GL_ARRAY_BUFFER, 6 * 2 * sizeof(float), positions, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, 4 * 2 * sizeof(float), positions, GL_STATIC_DRAW);
 
 	glEnableVertexAttribArray(0);
 	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 2, 0);
@@ -183,6 +183,11 @@ int main()
 	assert(location != -1);
 	GLCALL(glUniform4f(location, 1.0f, 0.3f, 0.8f, 1.0f));
 
+	GLCALL(glBindVertexArray(0));
+	GLCALL(glUseProgram(0));
+	GLCALL(glBindBuffer(GL_ARRAY_BUFFER, 0));
+	GLCALL(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0));
+
 	float red_component = 0.0f;
 	float increment = 0.05f;
 
@@ -198,7 +203,12 @@ int main()
 		//glVertex2f(0.5f, -0.5f);
 		//glEnd();
 
+		GLCALL(glUseProgram(shader));
 		GLCALL(glUniform4f(location, red_component, 0.3f, 0.8f, 1.0f));
+
+		GLCALL(glBindVertexArray(vao));
+		GLCALL(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo));
+
 		GLCALL(glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr));
 
 		if (red_component > 1.0f)
