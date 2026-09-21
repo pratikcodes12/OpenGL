@@ -32,7 +32,16 @@ FetchContent_Declare(
 FetchContent_MakeAvailable(glew)
 
 # Add source to this project's executable.
-add_executable (ModernOpenGL src/main.cpp)
+add_executable (
+    ModernOpenGL 
+    src/main.cpp
+    src/Renderer.cpp
+    src/Renderer.h
+    src/VertexBuffer.cpp
+    src/VertexBuffer.h
+    src/IndexBuffer.cpp
+    src/IndexBuffer.h
+)
 
 add_custom_command(TARGET ModernOpenGL POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy_directory
