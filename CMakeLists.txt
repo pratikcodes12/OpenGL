@@ -41,7 +41,7 @@ add_executable (
     src/VertexBuffer.h
     src/IndexBuffer.cpp
     src/IndexBuffer.h
-)
+ "src/VertexArray.h" "src/VertexBufferLayout.h" "src/VertexArray.cpp")
 
 add_custom_command(TARGET ModernOpenGL POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy_directory
