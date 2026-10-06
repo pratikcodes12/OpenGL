@@ -41,6 +41,8 @@ add_executable (
     src/VertexBuffer.h
     src/IndexBuffer.cpp
     src/IndexBuffer.h
+    src/Shader.cpp
+    src/Shader.h
  "src/VertexArray.h" "src/VertexBufferLayout.h" "src/VertexArray.cpp")
 
 add_custom_command(TARGET ModernOpenGL POST_BUILD
