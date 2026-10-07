@@ -73,20 +73,18 @@ int main()
 	ib.Unbind();
 	shader.UnBind();
 
+	Renderer renderer;
+
 	float red_component = 0.0f;
 	float increment = 0.05f;
 
 	while (!glfwWindowShouldClose(window))
 	{
-		glClear(GL_COLOR_BUFFER_BIT);
-
+		renderer.Clear();
 		shader.Bind();
 		shader.SetUniform4f("u_Color", red_component, 0.3f, 0.8f, 1.0f);
 
-		va.Bind();
-		ib.Bind();
-
-		GLCALL(glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr));
+		renderer.Draw(va, ib, shader);
 
 		if (red_component > 1.0f)
 			increment = -0.05f;
