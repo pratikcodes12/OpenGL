@@ -11,8 +11,8 @@
 Shader::Shader(const std::string& filepath)
 	: m_FilePath(filepath), m_RendererID(0)
 {
-	ShaderProgramSource source = parseShader(filepath);
-	m_RendererID = createShader(source.vertexSource, source.fragmentSource);
+	auto [vertexSource, fragmentSource] = parseShader(filepath);
+	m_RendererID = createShader(vertexSource, fragmentSource);
 }
 
 Shader::~Shader()
@@ -20,7 +20,7 @@ Shader::~Shader()
 	GLCALL(glDeleteProgram(m_RendererID));
 }
 
-ShaderProgramSource Shader::parseShader(const std::string& filepath)
+std::tuple<std::string, std::string> Shader::parseShader(const std::string& filepath)
 {
 	std::ifstream stream(filepath);
 	enum class ShaderType
