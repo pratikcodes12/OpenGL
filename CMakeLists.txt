@@ -43,6 +43,8 @@ add_executable (
     src/IndexBuffer.h
     src/Shader.cpp
     src/Shader.h
+    src/Texture.cpp
+    src/vendor/stb_image/stb_image.cpp
  "src/VertexArray.h" "src/VertexBufferLayout.h" "src/VertexArray.cpp")
 
 add_custom_command(TARGET ModernOpenGL POST_BUILD
@@ -54,6 +56,7 @@ add_custom_command(TARGET ModernOpenGL POST_BUILD
 target_include_directories(
     ModernOpenGL
     PRIVATE
+        ${CMAKE_SOURCE_DIR}/src
         ${glew_SOURCE_DIR}/include
 )
 
